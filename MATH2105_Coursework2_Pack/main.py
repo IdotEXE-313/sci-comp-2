@@ -15,6 +15,9 @@ print(error_values)
 
 
 # QUESTION 2
+import numpy as np
+import matplotlib.pyplot as plt
+import numerical_calculus as n_cal
 x = 0.25; r = 2.0; nlevels = 1; nvalues = 4
 h = 1.0 / (r**(np.arange(nvalues)))
 f = lambda x: np.sin(np.pi*x)

@@ -102,7 +102,25 @@ def approximate_derivative(x: float,h:np.ndarray,nvalues:int,f: Callable[[float]
 
 
 ### QUESTION 2 - extrapolation
-def extrapolate_derivative(x,h,nvalues,nlevels,r,f,d2fdx2):
+def extrapolate_derivative(x:float,h:np.ndarray,nvalues:int,nlevels:int,r:float,f:Callable[[float],float],d2fdx2:Callable[[float],float]):
+
+    """
+    Inputs:
+    ----------
+    x (float): The value at which the function f will be approximated
+    h (np.ndarray): The range of h values for which the extrapolated difference will be used on
+    nvalues (integer): The number of values in the array 'h'
+    nlevels (integer): The number of extrapolated approximations to generate
+    r (float): The factor to which we use to reduce h during refinement
+    f (Callable): The function to apply the extrapolation process to
+    d2fdx2 (Callable): The exact second derivative of 'f' used to create absolute errors
+
+    Outputs:
+    ----------
+    error_values (numpy.ndarray): The absolute error values of shape (nvalues, nlevels+1)
+    fig (matplotlib.figure): A plot of the errors against 'h' values and the extrapolated approximations
+
+    """
 
     # Remove the following two lines when you have completed the code
     error_values = None

@@ -124,18 +124,15 @@ def extrapolate_derivative(x:float,h:np.ndarray,nvalues:int,nlevels:int,r:float,
 
     #Populate the error_values array with zeroes and compute the initial approximation for N_{0}(h)
     error_values = np.zeros((nvalues, nlevels+1), dtype=float)
-    N0, err, _ = approximate_derivative(x,h,nvalues,f,d2fdx2,False)
-    print(err)
+    current_n, err, _ = approximate_derivative(x,h,nvalues,f,d2fdx2,False)
 
-    # for l in range(0,nlevels + 1):
-    #     for k in range(0, nvalues):
-            
+    
+    
 
 
 
 
     # Remove the following two lines when you have completed the code
-    error_values = None
     fig = None
 
     return error_values, fig

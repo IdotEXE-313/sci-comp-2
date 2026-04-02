@@ -126,8 +126,14 @@ def extrapolate_derivative(x:float,h:np.ndarray,nvalues:int,nlevels:int,r:float,
     error_values = np.zeros((nvalues, nlevels+1), dtype=float)
     current_n, err, _ = approximate_derivative(x,h,nvalues,f,d2fdx2,False)
 
-    
-    
+    for l in range(0, nlevels+1):
+        for k in range(0, nvalues-l):
+            #Find the absolute error of N_L for each h_k
+            error_values[k,l] = np.abs(d2fdx2(x) - current_n[k])
+
+        #Update the extrapolations
+        for k in range(0, nvalues - l - 1):
+            current_n[k] = ((r**(2*(l+1)))*current_n[k+1] - current_n[k]) / (r**2*(l+1) - 1)
 
 
 

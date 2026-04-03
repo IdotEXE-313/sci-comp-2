@@ -136,10 +136,17 @@ def extrapolate_derivative(x:float,h:np.ndarray,nvalues:int,nlevels:int,r:float,
             current_n[k] = ((r**(2*(l+1)))*current_n[k+1] - current_n[k]) / (r**2*(l+1) - 1)
 
 
+    # Plot of errors against h_{k} values
+    fig = plt.figure()
+    x_vals = [np.array(h[:nvalues-l]) for l in range(nlevels+1)]
+    y_vals = [np.array(error_values[0:nvalues-l, l]) for l in range(nlevels+1)]
+    for l in range(0,nlevels + 1):
+        plt.loglog(x_vals[l], y_vals[l], label=f"Level {l}")
+    plt.xlabel("Step values h_k")
+    plt.ylabel("Errors")
+    plt.legend()
+    plt.show()
 
-
-    # Remove the following two lines when you have completed the code
-    fig = None
 
     return error_values, fig
 

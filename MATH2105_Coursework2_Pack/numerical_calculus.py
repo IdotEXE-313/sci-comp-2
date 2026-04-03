@@ -174,25 +174,51 @@ def gauss_integration(a:float,b:float,f:Callable[[float],float]):
     integral (float): The approximation to the integral of 'f' over the interval [a,b] using the Gauss integration rule.
     """
 
-    weights = np.array([[1.0],[1.0]])
-    nodes = np.array([[-1/np.sqrt(3)],[1/np.sqrt(3)]])
+    #Define the weights and nodes of the points provided in the coursework instructions
+    weights = np.array([1.0,1.0])
+    nodes = np.array([-1.0/np.sqrt(3.0),1/np.sqrt(3.0)])
 
-    shifted_weights = ((b-a)/2.0) * weights
+    #Transform these weights and nodes to account for the usual assumption of being on the domain [-1,1]
+    shifted_weights = (0.5 * (b-a)) * weights
     shifted_nodes = 0.5 * ((b-a)*nodes + (b+a))
 
     integral = np.sum(shifted_weights * f(shifted_nodes))
-
     return integral
 
 
 # QUESTION 4 - composite numerical integration
-def composite_integration(a,b,npanels,f,f_int,integration_rule):
+def composite_integration(a:float,b:float,npanels:int,f:Callable[[float],float],f_int:Callable[[float],float],integration_rule:Callable[[float, float, Callable[[float],float]],float]):
 
-    
+    """
+    Computes an approximation of the integral of 'f' over the interval [a,b] using the composite integration method
 
-    # Remove the following two lines when you have completed the code
-    integral = None
-    error_value = None
+    Inputs:
+    ----------
+    a (float): The lower value of the interval [a,b]
+    b (float): The upper value of the interval [a,b]
+    npanels (integer): The number of panels that the interval [a,b] is divided into
+    f (Callable): The function that we will apply composite integration to
+    f_int (Callable): The indefinite integral of 'f'
+    integration_rule (Callable): The numerical method of integration to be applied (either trapezium or gauss integration)
+
+    Outputs:
+    ----------
+    integral (float): The approximation to the integral of 'f' after applying composite integration
+    error_value (float): The absolute value of the error between the exact integral and the approximation over [a,b]
+    """
+
+    #Generate the upper limit of each subinterval 
+    upper_lims = np.linspace(a,b,npanels+1)
+    approximations = np.zeros(npanels,)
+
+    #Apply the integration rule to each subinterval
+    for endpoint in range(0,len(upper_lims)-1):
+        approximations[endpoint] = integration_rule(upper_lims[endpoint], upper_lims[endpoint + 1], f)
+    integral = np.sum(approximations)
+
+    #Calculate the errors of the exact integral and the approximate integral
+    exact_integral = f_int(b) - f_int(a)
+    error_value = np.abs(exact_integral - integral)
 
     return integral, error_value
 

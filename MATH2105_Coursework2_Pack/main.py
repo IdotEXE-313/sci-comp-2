@@ -47,6 +47,9 @@ print(integral_gauss)
 
 
 # QUESTION 4
+import numpy as np
+import matplotlib.pyplot as plt
+import numerical_calculus as n_cal
 a = 1.0; b = 2.0; npanels = 10
 f = lambda x: np.sin(np.pi*x)
 f_int = lambda x: -np.cos(np.pi*x)/np.pi

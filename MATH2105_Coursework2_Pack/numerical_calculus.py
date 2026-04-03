@@ -133,7 +133,7 @@ def extrapolate_derivative(x:float,h:np.ndarray,nvalues:int,nlevels:int,r:float,
 
         #Update the extrapolations
         for k in range(0, nvalues - l - 1):
-            current_n[k] = ((r**(2*(l+1)))*current_n[k+1] - current_n[k]) / (r**2*(l+1) - 1)
+            current_n[k] = ((r**(2*(l+1)))*current_n[k+1] - current_n[k]) / (r**(2*(l+1)) - 1)
 
 
     # Plot of errors against h_{k} values

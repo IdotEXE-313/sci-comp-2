@@ -226,9 +226,10 @@ def composite_integration(a:float,b:float,npanels:int,f:Callable[[float],float],
 # QUESTION 5 - errors in composite numerical integration
 def composite_errors(a,b,npanels,f,d2fdx2,d4fdx4,f_int):
 
-    # Remove the following three lines when you have completed the code
-    error_values = None
-    error_bounds = None
+
+    
+    error_values = np.ndarray(2, npanels.size)
+    error_bounds = np.ndarray(2, npanels.size)
     fig = None
 
     return error_values, error_bounds, fig

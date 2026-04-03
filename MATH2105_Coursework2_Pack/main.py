@@ -36,6 +36,9 @@ print(error_values)
 
 
 # QUESTION 3
+import numpy as np
+import matplotlib.pyplot as plt
+import numerical_calculus as n_cal
 a = 1.0; b = 2.0
 f = lambda x: np.sin(np.pi*x)
 integral_gauss = n_cal.gauss_integration(a,b,f)

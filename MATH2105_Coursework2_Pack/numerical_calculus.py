@@ -158,16 +158,37 @@ def extrapolate_derivative(x:float,h:np.ndarray,nvalues:int,nlevels:int,r:float,
 
 
 # QUESTION 3 - Gauss integration rule
-def gauss_integration(a,b,f):
+def gauss_integration(a:float,b:float,f:Callable[[float],float]):
 
-    # Remove the following line when you have completed the code
-    integral = None
+    """
+    Returns an approximation to the integral of 'f' over an interval, [a,b], using the 2 point Gauss integration rule
+
+    Inputs: 
+    ----------
+    a (float): The lower value of the interval [a,b]
+    b (float): The upper value of the interval [a,b]
+    f (Callable): The function to apply the Gauss integration rule to
+
+    Outputs:
+    ----------
+    integral (float): The approximation to the integral of 'f' over the interval [a,b] using the Gauss integration rule.
+    """
+
+    weights = np.array([[1.0],[1.0]])
+    nodes = np.array([[-1/np.sqrt(3)],[1/np.sqrt(3)]])
+
+    shifted_weights = ((b-a)/2.0) * weights
+    shifted_nodes = 0.5 * ((b-a)*nodes + (b+a))
+
+    integral = np.sum(shifted_weights * f(shifted_nodes))
 
     return integral
 
 
 # QUESTION 4 - composite numerical integration
 def composite_integration(a,b,npanels,f,f_int,integration_rule):
+
+    
 
     # Remove the following two lines when you have completed the code
     integral = None

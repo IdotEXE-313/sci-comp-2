@@ -105,6 +105,12 @@ def approximate_derivative(x: float,h:np.ndarray,nvalues:int,f: Callable[[float]
 def extrapolate_derivative(x:float,h:np.ndarray,nvalues:int,nlevels:int,r:float,f:Callable[[float],float],d2fdx2:Callable[[float],float]):
 
     """
+    For sin(pi*x) at x=0.25, our graph shows decreasing error terms as the level of extrapolation increases (as the step size increases). 
+    For max(0, (x-1)**3) at x=1.0, the graph shows a positive linear relationship between its error terms and its extrapolation level as step sizes increase. 
+    This is because the second derivative of max(0, (x-1)^3) at x=1.0 is 0 for all x, so the error terms are precisely the derivative approximation, and there's
+    no correction of error terms which produces a linear relationship in the loglog graph.
+
+
     Inputs:
     ----------
     x (float): The value at which the function f will be approximated
@@ -141,7 +147,7 @@ def extrapolate_derivative(x:float,h:np.ndarray,nvalues:int,nlevels:int,r:float,
     x_vals = [np.array(h[:nvalues-l]) for l in range(nlevels+1)]
     y_vals = [np.array(error_values[0:nvalues-l, l]) for l in range(nlevels+1)]
     for l in range(0,nlevels + 1):
-        plt.loglog(x_vals[l], y_vals[l], label=f"Level {l}")
+        plt.loglog(x_vals[l], y_vals[l],"-o", label=f"Level {l}")
     plt.xlabel("Step values h_k")
     plt.ylabel("Errors")
     plt.legend()

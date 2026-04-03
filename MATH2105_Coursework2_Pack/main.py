@@ -27,6 +27,13 @@ error_values, q2_fig = n_cal.extrapolate_derivative(x,h,nvalues,nlevels,r,f,d2fd
 print('Q2 test output:')
 print(error_values)
 
+x=1.0
+f = lambda x: np.maximum(0, (x-1)**3)
+d2fdx2 = lambda x: np.maximum(0, 6*(x-1))
+error_values, fig = n_cal.extrapolate_derivative(x,h,nvalues,nlevels,r,f,d2fdx2)
+print("Maximum question:")
+print(error_values)
+
 
 # QUESTION 3
 a = 1.0; b = 2.0

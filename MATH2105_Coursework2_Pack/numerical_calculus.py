@@ -226,11 +226,20 @@ def composite_integration(a:float,b:float,npanels:int,f:Callable[[float],float],
 # QUESTION 5 - errors in composite numerical integration
 def composite_errors(a,b,npanels,f,d2fdx2,d4fdx4,f_int):
 
-
     
-    error_values = np.ndarray(2, npanels.size)
-    error_bounds = np.ndarray(2, npanels.size)
-    fig = None
+    error_values = np.zeros((2, npanels.size))
+    error_bounds = np.zeros((2, npanels.size))
+
+    for k,panel in enumerate(npanels):
+        trap_approx, trap_err = composite_integration(a,b,panel,f,f_int,trapezoidal_integration)
+        gauss_approx, gauss_err = composite_integration(a,b,panel,f,f_int,gauss_integration)
+
+        error_values[0,k] = trap_err
+        error_values[1,k] = gauss_err
+
+
+
+    fig = plt.plot()
 
     return error_values, error_bounds, fig
 

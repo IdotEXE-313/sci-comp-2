@@ -61,6 +61,9 @@ print(composite_gauss,error_gauss)
 
 
 # QUESTION 5
+import numpy as np
+import matplotlib.pyplot as plt
+import numerical_calculus as n_cal
 a = 1.0; b = 2.0
 npanels = 100 * 2**(np.arange(11))
 f = lambda x: np.sin(np.pi*x)

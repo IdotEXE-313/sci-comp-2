@@ -229,17 +229,37 @@ def composite_errors(a,b,npanels,f,d2fdx2,d4fdx4,f_int):
     
     error_values = np.zeros((2, npanels.size))
     error_bounds = np.zeros((2, npanels.size))
+    upper_lims = np.linspace(a,b,1001) #Split the interval [a,b] into 1000 equal sized subintervals, used to generate the error bounds
+    midpoints = 0.5 * (upper_lims[:-1] + upper_lims[1:])
 
+    max_second = np.max(np.abs(d2fdx2(midpoints)))
+    max_fourth = np.max(np.abs(d4fdx4(midpoints)))
+
+    # Store the errors for each panel size (computed in the composite integration function)
     for k,panel in enumerate(npanels):
+        h = (b-a)/panel
         trap_approx, trap_err = composite_integration(a,b,panel,f,f_int,trapezoidal_integration)
         gauss_approx, gauss_err = composite_integration(a,b,panel,f,f_int,gauss_integration)
 
         error_values[0,k] = trap_err
         error_values[1,k] = gauss_err
 
+        # Calculate the error bounds for each integration method, and then store them
+        error_bounds[0,k] = ((h**2)/12) * (b-a) * max_second
+        error_bounds[1,k]= ((h**4)/4320) * (b-a) * max_fourth
 
+    # Set up the required graph
+    fig = plt.figure()
+    plt.loglog(npanels, error_values[0, :], label="Error Values (Trapezium Rule)")
+    plt.loglog(npanels, error_bounds[0,:], label="Error Bounds (Trapezium Rule)")
+    plt.loglog(npanels, error_values[1,:], label="Error Values (Gaussian)")
+    plt.loglog(npanels, error_bounds[1,:], label="Error Bounds (Gaussian)")
 
-    fig = plt.plot()
+    plt.xlabel("Number of Panels")
+    plt.ylabel("Error Values/Bounds")
+    plt.legend()
+    plt.show()
+
 
     return error_values, error_bounds, fig
 

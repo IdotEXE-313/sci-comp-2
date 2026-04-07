@@ -88,6 +88,9 @@ print(error_bounds)
 
 
 # QUESTION 6
+import numpy as np
+import matplotlib.pyplot as plt
+import numerical_calculus as n_cal
 a = 1.0; b = 2000.0
 Nmax = 200; TOL = 1e-10
 hinitial = 1000.0; vterm = 5.0

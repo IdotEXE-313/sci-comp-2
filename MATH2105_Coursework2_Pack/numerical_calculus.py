@@ -267,6 +267,20 @@ def composite_errors(a,b,npanels,f,d2fdx2,d4fdx4,f_int):
 # QUESTION 6 - landing time computation
 def compute_time(a,b,Nmax,TOL,hinitial,vterm):
 
+    """
+    Defining F(T) = Hinitial - integral of v from 0 to T, we aim to get F(T) = 0.
+    """
+
+    # Define the function of velocity (dx/dt) as stated in the assignment notes
+    g = 9.81
+    v = lambda t: vterm * np.tanh((g*t)/vterm)
+    f_int = 0
+
+    estimated_displacement = composite_integration(a,b,20,v,f_int,gauss_integration)
+    print(estimated_displacement)
+
+    
+
     # Remove the following two lines when you have completed the code
     landing_time = None
     niters = None

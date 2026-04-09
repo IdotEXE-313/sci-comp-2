@@ -105,10 +105,10 @@ def approximate_derivative(x: float,h:np.ndarray,nvalues:int,f: Callable[[float]
 def extrapolate_derivative(x:float,h:np.ndarray,nvalues:int,nlevels:int,r:float,f:Callable[[float],float],d2fdx2:Callable[[float],float]):
 
     """
-    For sin(pi*x) at x=0.25, our graph shows decreasing error terms as the level of extrapolation increases (as the step size increases). 
-    For max(0, (x-1)**3) at x=1.0, the graph shows a positive linear relationship between its error terms and its extrapolation level as step sizes increase. 
-    This is because the second derivative of max(0, (x-1)^3) at x=1.0 is 0 for all x, so the error terms are precisely the derivative approximation, and there's
-    no correction of error terms which produces a linear relationship in the loglog graph.
+    For sin(pi*x) at x=0.25, our graph shows decreasing error terms as the level of extrapolation increases (as the step size reduces). 
+    For max(0, (x-1)**3) at x=1.0, the graph shows a positive linear relationship between its error terms and its extrapolation level as step sizes reduce. 
+    This is because max(0, (x-1)^3) is discontinuous at x=1, so there's no cancellation of the first term and the loglog graph produces a linear relationship. 
+    In comparison, sin(pi*x) is differentiable everywhere on a real domain [a,b], and so we observe the typical behaviour of higher level extrapolations.
 
 
     Inputs:

@@ -224,10 +224,35 @@ def composite_integration(a:float,b:float,npanels:int,f:Callable[[float],float],
 
 
 # QUESTION 5 - errors in composite numerical integration
-def composite_errors(a,b,npanels,f,d2fdx2,d4fdx4,f_int):
+def composite_errors(a:float,b:float,npanels:int,f:Callable[[float],float],d2fdx2:Callable[[float],float],d4fdx4:Callable[[float],float],f_int:Callable[[float],float]):
 
     """
-    
+    For sin(pi*x) on [1,2], the error values and error bounds (for the Trapezium rule) converge between 10^-8 and 10^-11 at a similar rate, with the error values converging
+    slightly lower than the error bounds when the number of panels reaches 10^5. For 2-point Gaussian integration, the error values converge much faster to 0 compared
+    to the error bounds, with the error values converging to 0 between 10^3 and 10^4 panels, whilst its error bound continues to converge linearly towards 0 when we 
+    reach 10^5 panels and beyond. The behaviour between the error bounds and values for both forms of integration are due to the fact that sin(pi*x) is analytic on [1,2],
+    which means that the error bounds and values have little deviation
+    Compared to xln(x) on [0,1], the error values of the Trapezium is consistently smaller than the error bounds; for example, when the number of panels are around 100, 
+    the error values start between 10^-3 and 10^-5, whereas the error bounds start between 10^-1 and 10^-3, with both reducing by two ranges when we reach 10^5 panels.
+    However, the error bounds of the 2-point Gaussian integration converges much closer and much quicker towards 0 compared to the error values, with the error bounds
+    fitting between 10^-11 and 10^-13 with 10^5 panels, whereas the error values fall below 10^-13 when we hit 10^5 panels. The behaviour of this is due to the fact that
+    the second derivative of xlnx has a singularity point at x=0.
+
+    Inputs:
+    ----------
+    a (float): The lower end of the interval [a,b]
+    b (float): The upper end of the interval [a,b]
+    npanels (integer): The number of subintervals to create when applying the composite integration function
+    f (Callable): The function on which the integral is approximated over [a,b]
+    d2fdx2 (Callable): The exact second derivative of 'f', used to compute error bounds for the Trapezium rule
+    d4fd4x (Callable): The exact fourth derivative of 'f', used to computer error bounds for the 2-point Gaussian integration rule
+    f_int (Callable): The exact integral of 'f', used to calculate error values
+
+    Outputs:
+    ----------
+    error_values (numpy.ndarray): A numpy array of shape (2,npanels.size) with the error values of the Trapezium rule on [0,k], and error values of Gaussian integration on [1,k]
+    error_bounds (numpy.ndarray): A numpy array of shape (2,npanels.size) with the error bounds of the Trapezium rule on [0,k], and error bounds of Gaussian integration on [1,k]
+    fig (matplotlib.fig): A plot showing the error bounds and values against the number of panels used in each integration method
     """
 
     

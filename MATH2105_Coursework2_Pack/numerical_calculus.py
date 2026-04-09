@@ -226,6 +226,10 @@ def composite_integration(a:float,b:float,npanels:int,f:Callable[[float],float],
 # QUESTION 5 - errors in composite numerical integration
 def composite_errors(a,b,npanels,f,d2fdx2,d4fdx4,f_int):
 
+    """
+    
+    """
+
     
     error_values = np.zeros((2, npanels.size))
     error_bounds = np.zeros((2, npanels.size))
@@ -248,7 +252,7 @@ def composite_errors(a,b,npanels,f,d2fdx2,d4fdx4,f_int):
         error_bounds[0,k] = ((h**2)/12) * (b-a) * max_second
         error_bounds[1,k]= ((h**4)/4320) * (b-a) * max_fourth
 
-    # Set up the required graph
+    # Set up the required graph and show it
     fig = plt.figure()
     plt.loglog(npanels, error_values[0, :], label="Error Values (Trapezium Rule)")
     plt.loglog(npanels, error_bounds[0,:], label="Error Bounds (Trapezium Rule)")
@@ -263,28 +267,85 @@ def composite_errors(a,b,npanels,f,d2fdx2,d4fdx4,f_int):
 
     return error_values, error_bounds, fig
 
-
-# QUESTION 6 - landing time computation
-def compute_time(a,b,Nmax,TOL,hinitial,vterm):
+# Bisection method needed for q6
+def bisection(f:Callable[[float],float], a:float,b:float,Nmax:int,TOL:float):
 
     """
-    Defining F(T) = Hinitial - integral of v from 0 to T, we aim to get F(T) = 0.
+    Implements the bisection method for solving f(x)=0 on an interval [a,b] and returns the approximation of x
+
+    Inputs:
+    ----------
+    f (Callable): The function to be iterated over
+    a (float): The lower end of the interval [a,b]
+    b (float): The upper end of the interval [a,b]
+    Nmax (integer): The maximum number of iterations to be used
+    TOL (float): The tolerance that signifies when to terminate the algorithm (when (b-a)/2^n < TOL)
+
+    Outputs:
+    ----------
+    p (float): An approximation to the solution of f(x)=0
+    n (integer): The number of iterations taken to approximate a solution to f(x) = 0 (Nmax if the tolerance critera isn't achieved)
+    """
+
+    if(f(a) * f(b)) >= 0:
+        raise ValueError("The bisection method can only be run on a function where f(a)f(b) < 0")
+
+    n = 1
+    fa = f(a)
+
+    while n <= Nmax:
+        p = (a + b) / 2
+        fp = f(p)
+
+        if np.abs(fp) < TOL or ((b - a) / 2) < TOL:
+            return p, n
+
+        if fa * fp > 0:
+            a = p
+            fa = fp
+        else:
+            b = p
+
+        n += 1
+
+    return p, n
+
+
+# QUESTION 6 - landing time computation
+def compute_time(a:float,b:float,Nmax:int,TOL:float,hinitial:float,vterm:float):
+
+    """
+    Gaussian integration was selected in 'f' since the degree of accuracy for 2-point Gaussian integration is n=3, whereas the degree of accuracy
+    for the trapzeium rule is only n=1. Since 'f' is not linear, we gain greater accuracy for higher order approximations.
+    The bisection method was selected as the nonlinear solver for finding the root of 'f' since we do not have an initial approximation for where the root
+    could be (especially as the exact answer is between a=1 and b=2000), and is also guaranteed to converge. Given the modelling situation, we require
+    a solution or we could have a situation where the jumper never reaches the ground. 
+    1000 panels were selected as a means to evaluate small intervals and achieve a greater degree of accuracy of the end result, whilst ensuring the 
+    program does not take an excessive amount of time to run (e.g. 10,000 panels took more than 2x the time to produce an output).
+
+    Inputs:
+    ----------
+    a (float): The lower end of the interval [a,b]
+    b (float): The upper end of the interval [a,b]
+    Nmax (integer): The maximum number of iterations to run in our nonlinear solver
+    TOL (float): The value at which we terminate the nonlinear solver before reaching Nmax
+    hinitial (float): The initial height that the jumper is at above ground level
+    vterm (float): The terminal velocity the jumper reaches whilst falling
+
+    Outputs:
+    ----------
+    landing_time (float): An approximation to the time it took the jumper to reach ground level
+    niters (integer): The number of iterations it took for the nonlinear solver to find a root of 'f'. This will be equal to Nmax if the convergence criteria isn't met.
+    
     """
 
     # Define the function of velocity (dx/dt) as stated in the assignment notes
     g = 9.81
     v = lambda t: vterm * np.tanh((g*t)/vterm)
-    f_int = 0
+    f_int = lambda x: 0
+    f = lambda t: hinitial - composite_integration(0,t,1000,v,f_int,gauss_integration)[0]
 
-    estimated_displacement = composite_integration(a,b,20,v,f_int,gauss_integration)
-    print(estimated_displacement)
-
-    
-
-    # Remove the following two lines when you have completed the code
-    landing_time = None
-    niters = None
-
+    landing_time, niters = bisection(f,a,b,Nmax,TOL)
     return landing_time, niters
 
 #### Your submission should have no code after this point ####

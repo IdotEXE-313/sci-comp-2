@@ -227,16 +227,13 @@ def composite_integration(a:float,b:float,npanels:int,f:Callable[[float],float],
 def composite_errors(a:float,b:float,npanels:int,f:Callable[[float],float],d2fdx2:Callable[[float],float],d4fdx4:Callable[[float],float],f_int:Callable[[float],float]):
 
     """
-    For sin(pi*x) on [1,2], the error values and error bounds (for the Trapezium rule) converge between 10^-8 and 10^-11 at a similar rate, with the error values converging
-    slightly lower than the error bounds when the number of panels reaches 10^5. For 2-point Gaussian integration, the error values converge much faster to 0 compared
-    to the error bounds, with the error values converging to 0 between 10^3 and 10^4 panels, whilst its error bound continues to converge linearly towards 0 when we 
-    reach 10^5 panels and beyond. The behaviour between the error bounds and values for both forms of integration are due to the fact that sin(pi*x) is analytic on [1,2],
-    which means that the error bounds and values have little deviation
-    Compared to xln(x) on [0,1], the error values of the Trapezium is consistently smaller than the error bounds; for example, when the number of panels are around 100, 
-    the error values start between 10^-3 and 10^-5, whereas the error bounds start between 10^-1 and 10^-3, with both reducing by two ranges when we reach 10^5 panels.
-    However, the error bounds of the 2-point Gaussian integration converges much closer and much quicker towards 0 compared to the error values, with the error bounds
-    fitting between 10^-11 and 10^-13 with 10^5 panels, whereas the error values fall below 10^-13 when we hit 10^5 panels. The behaviour of this is due to the fact that
-    the second derivative of xlnx has a singularity point at x=0.
+    For sin(pi*x) on [1,2], the error values for both the Trapezium rule and the 2-point Gaussian integration rule appear bounded above by its error bounds, with very little
+    deviation between its error values and the error bounds (e.g. they converge linearly towards 0 at a similar rate). We have complete convergence to 0 between 10^3 and 10^4 panels
+    for Gaussian error values, whilst the error bounds continue to reduce linearly as the number of panels increase.
+    For xlnx on [0,1], the error values for the Trapezium rule are bounded above by its error bounds, but these differ much more dramatically than the previous function. More importantly,
+    the error bound falls below the real error values for Gaussian integration once we have panels between 10^4 and 10^5. This is because 2-point Gaussian integration has error bounds
+    that depend on the fourth derivative, but we have a singularity point at the second derivative (and higher) at x=0 for xlnx; this dominates the integral before it, and will lead
+    to error bounds falling below the true value.
 
     Inputs:
     ----------

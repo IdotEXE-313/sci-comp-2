@@ -80,8 +80,7 @@ def approximate_derivative(x: float,h:np.ndarray,nvalues:int,f: Callable[[float]
     fig (matplotlib.figure): The plot of errors against h. None if 'produce_fig' is False.
 
     """
-
-    #Populate the array to later fill with approximations
+    
     approx_values = np.zeros(nvalues,)
     error_values = np.zeros(nvalues,)
 
@@ -96,6 +95,7 @@ def approximate_derivative(x: float,h:np.ndarray,nvalues:int,f: Callable[[float]
         plt.loglog(h, error_values, 'o-')
         plt.xlabel("h-values")
         plt.ylabel("error values")
+        plt.title("Error Values Against H-Values")
         plt.show()
 
     return approx_values, error_values, fig
@@ -151,6 +151,7 @@ def extrapolate_derivative(x:float,h:np.ndarray,nvalues:int,nlevels:int,r:float,
         plt.loglog(x_vals[l], y_vals[l],"-o", label=f"Level {l}")
     plt.xlabel("Step values h_k")
     plt.ylabel("Errors")
+    plt.title("Plot Of Errors Against 'H' Values and Extrapolated Approximations")
     plt.legend()
     plt.show()
 
@@ -284,6 +285,7 @@ def composite_errors(a:float,b:float,npanels:int,f:Callable[[float],float],d2fdx
 
     plt.xlabel("Number of Panels")
     plt.ylabel("Error Values/Bounds")
+    plt.title("Error Bounds/Values Against Number Of Panels Used In Each Integration Method")
     plt.legend()
     plt.show()
 

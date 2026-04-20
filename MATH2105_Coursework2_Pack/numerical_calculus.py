@@ -288,7 +288,16 @@ def composite_errors(a:float,b:float,npanels:int,f:Callable[[float],float],d2fdx
 def compute_time(a:float,b:float,Nmax:int,TOL:float,hinitial:float,vterm:float):
 
     """
-    Needs explanation
+    Given the physical situation (constant speed, object falling to the ground), then we know that we can estimate an initial guess for a root of F(T) as time = distance / speed.
+    Given also that the derivative of F(T) is analytical (it is just -v(t)), and -v(200) = -5 (which is sufficiently far from 0, i.e. F'(T) is not equal to zero at the root) and is 
+    twice differentiable in the domain [1,2000], then we can apply the Newton-Rasphon method for our nonlinear solver. We choose this because, under the correct conditions (which we have),
+    Newton's method converges quadratically. It may have been sufficient to use the bisection method, but this converges linearly, so the overall iterations (and thus v-iterations)
+    is signficiantly lower when using the Newton method. 
+    We choose Gaussian integration because, per evaluation, Gaussian two-point integration provides much greater accuracy by selecting weighted nodes to capture curvature that would
+    require a larger number of panels to accurately approximate under the trapezoidal rule. Hence, the overall number of panels is much smaller under Gaussian two-point integration.
+    Finally, we select 445 panels for the two-point Gaussian integration as an iterative process; at 1000 panels, we get 3000 viters, and at 500 panels we get 1500 viters (both provide
+    200.353 as the root to 3 decimal places, so we work with this as the assumption of the correct answer); at 440 panels, we see stability towards 200.353, and we add 5 panels for added
+    stability which provides us with 1335 viters.
 
     Inputs:
     ----------
@@ -307,7 +316,7 @@ def compute_time(a:float,b:float,Nmax:int,TOL:float,hinitial:float,vterm:float):
     """
 
     viters = [0]
-    initial_guess = hinitial / vterm
+    initial_guess = hinitial / vterm #Approximate the initial guess of the time taken to fall to ground with time = distance / speed
 
     # Define the function of velocity (dx/dt) as stated in the assignment notes
     g = 9.81
@@ -315,11 +324,11 @@ def compute_time(a:float,b:float,Nmax:int,TOL:float,hinitial:float,vterm:float):
         viters[0] += 1
         return vterm * np.tanh((g*t)/vterm)
     f_int = lambda x: 0
-    f = lambda t: hinitial - composite_integration(0,t,450,v,f_int,gauss_integration)[0]
-    f_prime = lambda t: -vterm * np.tanh((g*t)/vterm)
+    f_prime = lambda t: -vterm * np.tanh((g*t)/vterm) # We have that the derivative of F(T) is just -v(t)
+    f = lambda t: hinitial - composite_integration(0,t,445,v,f_int,gauss_integration)[0]
 
-    root = sp.optimize.newton(f, initial_guess, f_prime, maxiter=Nmax, tol=TOL)
-    return root, viters
+    root, info = sp.optimize.newton(f, initial_guess, f_prime, maxiter=Nmax, tol=TOL, full_output=True)
+    return root, info.iterations
     
 
 #### Your submission should have no code after this point ####

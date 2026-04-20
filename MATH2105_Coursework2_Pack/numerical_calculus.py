@@ -298,13 +298,7 @@ def composite_errors(a:float,b:float,npanels:int,f:Callable[[float],float],d2fdx
 def compute_time(a:float,b:float,Nmax:int,TOL:float,hinitial:float,vterm:float):
 
     """
-    Gaussian integration was selected in 'f' since the degree of accuracy for 2-point Gaussian integration is n=3, whereas the degree of accuracy
-    for the trapzeium rule is only n=1. Since 'f' is not linear, we gain greater accuracy for higher order approximations.
-    The bisection method was selected as the nonlinear solver for finding the root of 'f' since we do not have an initial approximation for where the root
-    could be (especially as the exact answer is between a=1 and b=2000), and is also guaranteed to converge. Given the modelling situation, we require
-    a solution or we could have a situation where the jumper never reaches the ground. 
-    1000 panels were selected as a means to evaluate small intervals and achieve a greater degree of accuracy of the end result, whilst ensuring the 
-    program does not take an excessive amount of time to run (e.g. 10,000 panels took more than 2x the time to produce an output).
+
 
     Inputs:
     ----------
@@ -323,6 +317,7 @@ def compute_time(a:float,b:float,Nmax:int,TOL:float,hinitial:float,vterm:float):
     """
 
     viters = [0]
+    initial_guess = hinitial / vterm
 
     # Define the function of velocity (dx/dt) as stated in the assignment notes
     g = 9.81
@@ -330,7 +325,11 @@ def compute_time(a:float,b:float,Nmax:int,TOL:float,hinitial:float,vterm:float):
         viters[0] += 1
         return vterm * np.tanh((g*t)/vterm)
     f_int = lambda x: 0
-    f = lambda t: hinitial - composite_integration(0,t,1000,v,f_int,gauss_integration)[0]
+    f = lambda t: hinitial - composite_integration(0,t,450,v,f_int,gauss_integration)[0]
+    f_prime = lambda t: -vterm * np.tanh((g*t)/vterm)
+
+    root = sp.optimize.newton(f, initial_guess, f_prime, maxiter=Nmax, tol=TOL)
+    return root, viters
     
 
 #### Your submission should have no code after this point ####

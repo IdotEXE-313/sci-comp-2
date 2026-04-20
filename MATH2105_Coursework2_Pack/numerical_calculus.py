@@ -106,11 +106,7 @@ def approximate_derivative(x: float,h:np.ndarray,nvalues:int,f: Callable[[float]
 def extrapolate_derivative(x:float,h:np.ndarray,nvalues:int,nlevels:int,r:float,f:Callable[[float],float],d2fdx2:Callable[[float],float]):
 
     """
-    For sin(pi*x) at x=0.25, our graph shows decreasing error terms as the level of extrapolation increases (as the step size reduces). 
-    For max(0, (x-1)**3) at x=1.0, the graph shows a positive linear relationship between its error terms and its extrapolation level as step sizes reduce. 
-    This is because max(0, (x-1)^3) is discontinuous at x=1 from the third derivative and higher, and leading error terms fail to cancel due to the insufficient 'smoothness' 
-    at this point. 
-    In comparison, sin(pi*x) is differentiable everywhere on a real domain [a,b], and so we observe the typical behaviour of higher level extrapolations.
+    Needs explanation
 
 
     Inputs:
@@ -230,13 +226,7 @@ def composite_integration(a:float,b:float,npanels:int,f:Callable[[float],float],
 def composite_errors(a:float,b:float,npanels:int,f:Callable[[float],float],d2fdx2:Callable[[float],float],d4fdx4:Callable[[float],float],f_int:Callable[[float],float]):
 
     """
-    For sin(pi*x) on [1,2], the error values for both the Trapezium rule and the 2-point Gaussian integration rule appear bounded above by its error bounds, with very little
-    deviation between its error values and the error bounds (e.g. they converge towards 0 at a similar rate). We have complete convergence to 0 between 10^3 and 10^4 panels
-    for Gaussian error values, whilst the error bounds continue to reduce linearly as the number of panels increase.
-    For xlnx on [0,1], the error values for the Trapezium rule are bounded above by its error bounds, but these differ much more dramatically than the previous function. More importantly,
-    the error bound falls below the real error values for Gaussian integration once we have panels between 10^4 and 10^5. This is because 2-point Gaussian integration has error bounds
-    that depend on the fourth derivative, but we have a singularity point at the second derivative (and higher) at x=0 for xlnx; this means that the derivative from the second order is
-    no longer bounded, and therefore is not a true bound.
+    Needs explanation
 
     Inputs:
     ----------
@@ -298,7 +288,7 @@ def composite_errors(a:float,b:float,npanels:int,f:Callable[[float],float],d2fdx
 def compute_time(a:float,b:float,Nmax:int,TOL:float,hinitial:float,vterm:float):
 
     """
-
+    Needs explanation
 
     Inputs:
     ----------

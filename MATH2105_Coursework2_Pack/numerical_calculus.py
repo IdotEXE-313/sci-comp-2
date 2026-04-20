@@ -80,8 +80,7 @@ def approximate_derivative(x: float,h:np.ndarray,nvalues:int,f: Callable[[float]
     fig (matplotlib.figure): The plot of errors against h. None if 'produce_fig' is False.
 
     """
-
-    #Populate the array to later fill with approximations
+    
     approx_values = np.zeros(nvalues,)
     error_values = np.zeros(nvalues,)
 
@@ -96,6 +95,7 @@ def approximate_derivative(x: float,h:np.ndarray,nvalues:int,f: Callable[[float]
         plt.loglog(h, error_values, 'o-')
         plt.xlabel("h-values")
         plt.ylabel("error values")
+        plt.title("Error Values Against H-Values")
         plt.show()
 
     return approx_values, error_values, fig
@@ -107,7 +107,8 @@ def extrapolate_derivative(x:float,h:np.ndarray,nvalues:int,nlevels:int,r:float,
     """
     For sin(pi*x) at x=0.25, our graph shows decreasing error terms as the level of extrapolation increases (as the step size reduces). 
     For max(0, (x-1)**3) at x=1.0, the graph shows a positive linear relationship between its error terms and its extrapolation level as step sizes reduce. 
-    This is because max(0, (x-1)^3) is discontinuous at x=1, so there's no cancellation of the first term and the loglog graph produces a linear relationship. 
+    This is because max(0, (x-1)^3) is discontinuous at x=1 from the third derivative and higher, and leading error terms fail to cancel due to the insufficient 'smoothness' 
+    at this point. 
     In comparison, sin(pi*x) is differentiable everywhere on a real domain [a,b], and so we observe the typical behaviour of higher level extrapolations.
 
 
@@ -150,6 +151,7 @@ def extrapolate_derivative(x:float,h:np.ndarray,nvalues:int,nlevels:int,r:float,
         plt.loglog(x_vals[l], y_vals[l],"-o", label=f"Level {l}")
     plt.xlabel("Step values h_k")
     plt.ylabel("Errors")
+    plt.title("Plot Of Errors Against 'H' Values and Extrapolated Approximations")
     plt.legend()
     plt.show()
 
@@ -228,12 +230,12 @@ def composite_errors(a:float,b:float,npanels:int,f:Callable[[float],float],d2fdx
 
     """
     For sin(pi*x) on [1,2], the error values for both the Trapezium rule and the 2-point Gaussian integration rule appear bounded above by its error bounds, with very little
-    deviation between its error values and the error bounds (e.g. they converge linearly towards 0 at a similar rate). We have complete convergence to 0 between 10^3 and 10^4 panels
+    deviation between its error values and the error bounds (e.g. they converge towards 0 at a similar rate). We have complete convergence to 0 between 10^3 and 10^4 panels
     for Gaussian error values, whilst the error bounds continue to reduce linearly as the number of panels increase.
     For xlnx on [0,1], the error values for the Trapezium rule are bounded above by its error bounds, but these differ much more dramatically than the previous function. More importantly,
     the error bound falls below the real error values for Gaussian integration once we have panels between 10^4 and 10^5. This is because 2-point Gaussian integration has error bounds
-    that depend on the fourth derivative, but we have a singularity point at the second derivative (and higher) at x=0 for xlnx; this dominates the integral before it, and will lead
-    to error bounds falling below the true value.
+    that depend on the fourth derivative, but we have a singularity point at the second derivative (and higher) at x=0 for xlnx; this means that the derivative from the second order is
+    no longer bounded, and therefore is not a true bound.
 
     Inputs:
     ----------
@@ -283,6 +285,7 @@ def composite_errors(a:float,b:float,npanels:int,f:Callable[[float],float],d2fdx
 
     plt.xlabel("Number of Panels")
     plt.ylabel("Error Values/Bounds")
+    plt.title("Error Bounds/Values Against Number Of Panels Used In Each Integration Method")
     plt.legend()
     plt.show()
 

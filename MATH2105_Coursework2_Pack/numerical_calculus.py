@@ -1,5 +1,6 @@
 ### Import modules ###
 import numpy as np
+import scipy as sp
 import matplotlib.pyplot as plt
 from typing import Callable
 ### No further imports should be required ###
@@ -292,49 +293,6 @@ def composite_errors(a:float,b:float,npanels:int,f:Callable[[float],float],d2fdx
 
     return error_values, error_bounds, fig
 
-# Bisection method needed for q6
-def bisection(f:Callable[[float],float], a:float,b:float,Nmax:int,TOL:float):
-
-    """
-    Implements the bisection method for solving f(x)=0 on an interval [a,b] and returns the approximation of x
-
-    Inputs:
-    ----------
-    f (Callable): The function to be iterated over
-    a (float): The lower end of the interval [a,b]
-    b (float): The upper end of the interval [a,b]
-    Nmax (integer): The maximum number of iterations to be used
-    TOL (float): The tolerance that signifies when to terminate the algorithm (when (b-a)/2^n < TOL)
-
-    Outputs:
-    ----------
-    p (float): An approximation to the solution of f(x)=0
-    n (integer): The number of iterations taken to approximate a solution to f(x) = 0 (Nmax if the tolerance critera isn't achieved)
-    """
-
-    if(f(a) * f(b)) >= 0:
-        raise ValueError("The bisection method can only be run on a function where f(a)f(b) < 0")
-
-    n = 1
-    fa = f(a)
-
-    while n <= Nmax:
-        p = (a + b) / 2
-        fp = f(p)
-
-        if np.abs(fp) < TOL or ((b - a) / 2) < TOL:
-            return p, n
-
-        if fa * fp > 0:
-            a = p
-            fa = fp
-        else:
-            b = p
-
-        n += 1
-
-    return p, n
-
 
 # QUESTION 6 - landing time computation
 def compute_time(a:float,b:float,Nmax:int,TOL:float,hinitial:float,vterm:float):
@@ -373,8 +331,6 @@ def compute_time(a:float,b:float,Nmax:int,TOL:float,hinitial:float,vterm:float):
         return vterm * np.tanh((g*t)/vterm)
     f_int = lambda x: 0
     f = lambda t: hinitial - composite_integration(0,t,1000,v,f_int,gauss_integration)[0]
-
-    landing_time, niters = bisection(f,a,b,Nmax,TOL)
-    return landing_time, viters[0]
+    
 
 #### Your submission should have no code after this point ####

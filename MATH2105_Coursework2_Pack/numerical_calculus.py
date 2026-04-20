@@ -314,6 +314,7 @@ def bisection(f:Callable[[float],float], a:float,b:float,Nmax:int,TOL:float):
 
     n = 1
     fa = f(a)
+    viters = 0
 
     while n <= Nmax:
         p = (a + b) / 2
@@ -330,7 +331,7 @@ def bisection(f:Callable[[float],float], a:float,b:float,Nmax:int,TOL:float):
 
         n += 1
 
-    return p, n
+    return p, n, viters
 
 
 # QUESTION 6 - landing time computation
@@ -361,13 +362,17 @@ def compute_time(a:float,b:float,Nmax:int,TOL:float,hinitial:float,vterm:float):
     
     """
 
+    viters = [0]
+
     # Define the function of velocity (dx/dt) as stated in the assignment notes
     g = 9.81
-    v = lambda t: vterm * np.tanh((g*t)/vterm)
+    def v(t):
+        viters[0] += 1
+        return vterm * np.tanh((g*t)/vterm)
     f_int = lambda x: 0
     f = lambda t: hinitial - composite_integration(0,t,1000,v,f_int,gauss_integration)[0]
 
     landing_time, niters = bisection(f,a,b,Nmax,TOL)
-    return landing_time, niters
+    return landing_time, viters[0]
 
 #### Your submission should have no code after this point ####

@@ -317,7 +317,6 @@ def bisection(f:Callable[[float],float], a:float,b:float,Nmax:int,TOL:float):
 
     n = 1
     fa = f(a)
-    viters = 0
 
     while n <= Nmax:
         p = (a + b) / 2
@@ -334,7 +333,7 @@ def bisection(f:Callable[[float],float], a:float,b:float,Nmax:int,TOL:float):
 
         n += 1
 
-    return p, n, viters
+    return p, n
 
 
 # QUESTION 6 - landing time computation

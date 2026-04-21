@@ -106,7 +106,14 @@ def approximate_derivative(x: float,h:np.ndarray,nvalues:int,f: Callable[[float]
 def extrapolate_derivative(x:float,h:np.ndarray,nvalues:int,nlevels:int,r:float,f:Callable[[float],float],d2fdx2:Callable[[float],float]):
 
     """
-    Needs explanation
+    1. We observe generally that, as the level of extrapolation increases, the errors decrease
+    and start to converge towards 0.
+    2. However, for f2, we observe that as the level of extrapolation increases, the errors increase
+    rather than improving the accuracy. In fact, all terms appear to increase linearly on the loglog graph.
+    This is because, as the level of extrapolation increases, we cancel out the previous term and our errors
+    depends on the derivative; however, for the third derivative of f2, we get a discontinuity at x=1, and 
+    so the terms for the third derivative and higher are dominated by this discontinuity, and we observe increasing
+    error terms (or decreasing accuracy in the improvement of each previous term).
 
 
     Inputs:

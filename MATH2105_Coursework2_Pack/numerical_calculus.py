@@ -226,7 +226,13 @@ def composite_integration(a:float,b:float,npanels:int,f:Callable[[float],float],
 def composite_errors(a:float,b:float,npanels:int,f:Callable[[float],float],d2fdx2:Callable[[float],float],d4fdx4:Callable[[float],float],f_int:Callable[[float],float]):
 
     """
-    Needs explanation
+    1. We observe convergence towards 0 on both the error values / panels, with the error bounds above the error values for both
+    the Trapezium rule and the two-point Gaussian integration rule. The Gaussian integration rule converges faster than the trapezium rule.
+    2. However, for f2, we observe convergence towards 0 but the error bounds are further apart for the Trapzeium rule, whereas for
+    Gaussian integration, the error values fall above the error bounds between 10^4 and 10^5 panels. 
+    This is because, at higher level derivatives for xln(x), we get divergence for any x^-n terms at x=0, so near x=0, the max derivative for the
+    error bound becomes harder to determine and may lead to inaccuracies in the bound; in this case, we eventually get underestimation for the Gaussian
+    integration rule (since the error bound depends on higher level deriavtives than the Trapezium rule).
 
     Inputs:
     ----------
